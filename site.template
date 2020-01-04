@@ -1,0 +1,19 @@
+server {
+    listen 80;
+
+    server_name ${APP_HOSTNAME};
+
+    location / {
+        try_files   $uri $uri/ =404;
+        root        /var/www/html/public;
+        index       index.php index.html;
+    }
+
+    location ~* \.php$ {
+        root            /var/www/html/public;
+        fastcgi_pass    ${FPM_HOST}:${FPM_PORT};
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+    }
+}
